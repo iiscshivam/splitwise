@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Splitwise - Expense Sharing & Debt Simplifier</title>
+  <title>Splitwise Pro - Expense Sharing & Debt Simplifier</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -15,21 +15,37 @@
 
   <!-- Header -->
   <header class="bg-slate-900/90 backdrop-blur border-b border-slate-800 sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center space-x-3">
         <div class="bg-emerald-500 text-slate-950 p-2.5 rounded-xl font-extrabold text-lg flex items-center justify-center shadow-lg shadow-emerald-500/20">
           <i class="fa-solid fa-receipt"></i>
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-lg font-bold tracking-tight text-white">Splitwise Pro</h1>
-            <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full">v1.0 Ready</span>
+            <h1 class="text-base font-bold tracking-tight text-white">Splitwise Pro</h1>
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full">v1.1</span>
           </div>
           <p class="text-xs text-slate-400">Min-Cash-Flow Debt Simplification Engine</p>
         </div>
       </div>
 
-      <div class="flex items-center space-x-2">
+      <!-- Currency & Action Controls -->
+      <div class="flex items-center space-x-2 flex-wrap">
+        <!-- Currency Selector -->
+        <div class="flex items-center bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1">
+          <span class="text-xs text-slate-400 mr-1.5 font-bold">Currency:</span>
+          <select id="currencySelector" onchange="handleCurrencyChange(this.value)" class="bg-transparent text-xs text-emerald-400 font-extrabold focus:outline-none cursor-pointer">
+            <option value="INR" class="bg-slate-900 text-white">INR (₹)</option>
+            <option value="USD" class="bg-slate-900 text-white">USD ($)</option>
+            <option value="EUR" class="bg-slate-900 text-white">EUR (€)</option>
+            <option value="GBP" class="bg-slate-900 text-white">GBP (£)</option>
+            <option value="JPY" class="bg-slate-900 text-white">JPY (¥)</option>
+            <option value="CAD" class="bg-slate-900 text-white">CAD (CA$)</option>
+            <option value="AUD" class="bg-slate-900 text-white">AUD (AU$)</option>
+            <option value="AED" class="bg-slate-900 text-white">AED (AED)</option>
+          </select>
+        </div>
+
         <button onclick="exportData()" title="Export JSON" class="px-3 py-1.5 text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition border border-slate-700 flex items-center gap-1">
           <i class="fa-solid fa-download text-emerald-400"></i> Export
         </button>
@@ -44,10 +60,10 @@
   </header>
 
   <!-- Main Container -->
-  <main class="max-w-6xl mx-auto px-4 py-8 flex-1 w-full space-y-8">
+  <main class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full space-y-6">
 
     <!-- Top Metric Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
       <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 shadow-sm">
         <div class="flex items-center justify-between text-slate-400 mb-1">
           <span class="text-xs font-bold uppercase tracking-wider">Total Group Spend</span>
@@ -72,7 +88,7 @@
           <i class="fa-solid fa-bolt text-amber-400"></i>
         </div>
         <div id="simplifiedCount" class="text-2xl font-black text-white">0</div>
-        <div class="text-xs text-emerald-400 mt-1">Optimized payments</div>
+        <div class="text-xs text-emerald-400 mt-1">Optimized transfers</div>
       </div>
 
       <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 shadow-sm">
@@ -85,8 +101,26 @@
       </div>
     </div>
 
+    <!-- Group Members Individual Detailed Balances (Prominent Section) -->
+    <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <div>
+          <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-scale-balanced text-amber-400"></i> Detailed Member Balances Ledger
+          </h2>
+          <p class="text-xs text-slate-400">Real-time individual financial standing and net balances for every person in the group</p>
+        </div>
+        <span class="text-xs font-semibold px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-full">All Members</span>
+      </div>
+
+      <!-- Member Balances Grid -->
+      <div id="detailedMemberBalancesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        <!-- Dynamically populated -->
+      </div>
+    </div>
+
     <!-- Main Layout Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
       
       <!-- Left Column: Add Expense & Member Manager (5 Cols) -->
       <div class="lg:col-span-5 space-y-6">
@@ -107,9 +141,9 @@
             
             <div class="grid grid-cols-2 gap-3">
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1.5">Amount ($)</label>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Amount (<span class="currencySymbolDisplay">$</span>)</label>
                 <input type="number" id="expAmount" step="0.01" min="0.01" required placeholder="0.00" 
-                       class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition">
+                       class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition font-bold">
               </div>
               <div>
                 <label class="block text-xs font-bold text-slate-300 mb-1.5">Category</label>
@@ -127,7 +161,7 @@
 
             <div>
               <label class="block text-xs font-bold text-slate-300 mb-1.5">Paid By</label>
-              <select id="expPayer" required class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition"></select>
+              <select id="expPayer" required class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition font-semibold"></select>
             </div>
 
             <div>
@@ -148,7 +182,7 @@
         <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
           <h2 class="text-base font-bold text-white flex items-center gap-2">
             <span class="p-1.5 bg-sky-500/10 text-sky-400 rounded-lg"><i class="fa-solid fa-user-group text-xs"></i></span>
-            Group Members
+            Group Members Management
           </h2>
 
           <form onsubmit="handleAddMember(event)" class="flex gap-2">
@@ -164,7 +198,7 @@
 
       </div>
 
-      <!-- Right Column: Simplified Debts, Net Balances & History (7 Cols) -->
+      <!-- Right Column: Simplified Debts & History (7 Cols) -->
       <div class="lg:col-span-7 space-y-6">
 
         <!-- Simplified Settlement Plan -->
@@ -180,14 +214,6 @@
           </div>
 
           <div id="simplifiedList" class="space-y-3"></div>
-        </div>
-
-        <!-- Net Balances Breakdown -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl">
-          <h2 class="text-base font-bold text-white mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-scale-balanced text-amber-400"></i> Net Balances
-          </h2>
-          <div id="netBalancesList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
         </div>
 
         <!-- Expense History -->
@@ -219,12 +245,35 @@
   </main>
 
   <footer class="bg-slate-900/50 border-t border-slate-800 py-4 text-center text-xs text-slate-500">
-    Splitwise Pro • Production Ready • Min-Cash-Flow Algorithm Engine
+    Splitwise Pro • Production Ready • Multi-Currency • Min-Cash-Flow Algorithm Engine
   </footer>
 
   <script>
-    // State management (with localStorage persistence & API fallback)
     const STORAGE_KEY = 'splitwise_pro_store';
+
+    const currencies = {
+      'INR': { symbol: '₹', name: 'Indian Rupee' },
+      'USD': { symbol: '$', name: 'US Dollar' },
+      'EUR': { symbol: '€', name: 'Euro' },
+      'GBP': { symbol: '£', name: 'British Pound' },
+      'JPY': { symbol: '¥', name: 'Japanese Yen' },
+      'CAD': { symbol: 'CA$', name: 'Canadian Dollar' },
+      'AUD': { symbol: 'AU$', name: 'Australian Dollar' },
+      'AED': { symbol: 'AED ', name: 'UAE Dirham' }
+    };
+
+    let currentCurrency = 'INR';
+
+    function formatMoney(amount) {
+      const sym = currencies[currentCurrency]?.symbol || '$';
+      return `${sym}${Math.abs(amount).toFixed(2)}`;
+    }
+
+    function handleCurrencyChange(newCur) {
+      currentCurrency = newCur;
+      document.querySelectorAll('.currencySymbolDisplay').forEach(el => el.textContent = currencies[newCur]?.symbol || '$');
+      loadData();
+    }
 
     let defaultState = {
       users: [
@@ -238,26 +287,26 @@
           id: 'e1',
           description: 'Team Dinner',
           category: 'Food',
-          amount: 120.00,
+          amount: 1200.00,
           paidById: '1',
           splits: [
-            { userId: '1', amount: 30.00 },
-            { userId: '2', amount: 30.00 },
-            { userId: '3', amount: 30.00 },
-            { userId: '4', amount: 30.00 }
+            { userId: '1', amount: 300.00 },
+            { userId: '2', amount: 300.00 },
+            { userId: '3', amount: 300.00 },
+            { userId: '4', amount: 300.00 }
           ],
           date: new Date().toISOString()
         },
         {
           id: 'e2',
-          description: 'Groceries & Supplies',
+          description: 'Groceries & Snacks',
           category: 'Groceries',
-          amount: 60.00,
+          amount: 600.00,
           paidById: '2',
           splits: [
-            { userId: '1', amount: 20.00 },
-            { userId: '2', amount: 20.00 },
-            { userId: '3', amount: 20.00 }
+            { userId: '1', amount: 200.00 },
+            { userId: '2', amount: 200.00 },
+            { userId: '3', amount: 200.00 }
           ],
           date: new Date().toISOString()
         }
@@ -287,18 +336,32 @@
 
     function calculateNetBalances(users, expenses, settlements) {
       const balances = {};
-      users.forEach(u => { balances[u.id] = 0; });
+      const paidTotals = {};
+      const shareTotals = {};
+
+      users.forEach(u => { 
+        balances[u.id] = 0; 
+        paidTotals[u.id] = 0;
+        shareTotals[u.id] = 0;
+      });
 
       expenses.forEach(e => {
         const total = parseFloat(e.amount);
         if (isNaN(total) || total <= 0) return;
         if (balances[e.paidById] === undefined) balances[e.paidById] = 0;
+        if (paidTotals[e.paidById] === undefined) paidTotals[e.paidById] = 0;
+
         balances[e.paidById] += total;
+        paidTotals[e.paidById] += total;
 
         if (Array.isArray(e.splits)) {
           e.splits.forEach(s => {
             if (balances[s.userId] === undefined) balances[s.userId] = 0;
-            balances[s.userId] -= parseFloat(s.amount);
+            if (shareTotals[s.userId] === undefined) shareTotals[s.userId] = 0;
+
+            const splitAmt = parseFloat(s.amount);
+            balances[s.userId] -= splitAmt;
+            shareTotals[s.userId] += splitAmt;
           });
         }
       });
@@ -314,7 +377,7 @@
         if (Math.abs(balances[id]) < 0.005) balances[id] = 0;
       });
 
-      return balances;
+      return { balances, paidTotals, shareTotals };
     }
 
     function simplifyDebts(balances, users) {
@@ -377,16 +440,66 @@
         ? state.expenses 
         : state.expenses.filter(e => e.category === filterCat);
 
-      const netBalances = calculateNetBalances(state.users, state.expenses, state.settlements);
-      const simplifiedDebts = simplifyDebts(netBalances, state.users);
+      const { balances, paidTotals, shareTotals } = calculateNetBalances(state.users, state.expenses, state.settlements);
+      const simplifiedDebts = simplifyDebts(balances, state.users);
       const totalSpend = state.expenses.reduce((sum, e) => sum + e.amount, 0);
 
       // Top stats
-      document.getElementById('totalSpend').textContent = `$${totalSpend.toFixed(2)}`;
+      document.getElementById('totalSpend').textContent = formatMoney(totalSpend);
       document.getElementById('expenseCount').textContent = `${state.expenses.length} expenses logged`;
       document.getElementById('memberCount').textContent = state.users.length;
       document.getElementById('simplifiedCount').textContent = simplifiedDebts.length;
       document.getElementById('settlementCount').textContent = state.settlements.length;
+
+      // Render Detailed Member Balances Grid
+      const memberBalGrid = document.getElementById('detailedMemberBalancesGrid');
+      memberBalGrid.innerHTML = state.users.map(u => {
+        const netAmt = balances[u.id] || 0;
+        const paid = paidTotals[u.id] || 0;
+        const share = shareTotals[u.id] || 0;
+
+        const isPositive = netAmt > 0.005;
+        const isNegative = netAmt < -0.005;
+
+        let statusBadge = 'bg-slate-800 text-slate-400 border-slate-700';
+        let statusText = 'Settled Up (0.00)';
+        let netColor = 'text-slate-400';
+
+        if (isPositive) {
+          statusBadge = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+          statusText = `Gets back +${formatMoney(netAmt)}`;
+          netColor = 'text-emerald-400';
+        } else if (isNegative) {
+          statusBadge = 'bg-rose-500/10 text-rose-400 border-rose-500/30';
+          statusText = `Owes -${formatMoney(netAmt)}`;
+          netColor = 'text-rose-400';
+        }
+
+        return `
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-bold text-xs">
+                  ${u.name.charAt(0)}
+                </div>
+                <span class="font-bold text-sm text-white">${u.name}</span>
+              </div>
+              <span class="text-[10px] font-black px-2 py-0.5 rounded-md border ${statusBadge}">${statusText}</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-xs border-t border-slate-800/80 pt-2 text-slate-400">
+              <div>
+                <span class="text-[10px] block">Total Paid</span>
+                <span class="font-bold text-white">${formatMoney(paid)}</span>
+              </div>
+              <div>
+                <span class="text-[10px] block">Total Share</span>
+                <span class="font-bold text-white">${formatMoney(share)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
 
       // Payer dropdown
       const payerSel = document.getElementById('expPayer');
@@ -410,32 +523,6 @@
           ${state.users.length > 2 ? `<button onclick="deleteMember('${u.id}')" class="text-slate-500 hover:text-rose-400 ml-1">×</button>` : ''}
         </div>
       `).join('');
-
-      // Net Balances
-      const balancesDiv = document.getElementById('netBalancesList');
-      balancesDiv.innerHTML = Object.entries(netBalances).map(([id, amt]) => {
-        const u = state.users.find(user => user.id === id);
-        const name = u ? u.name : id;
-        const isPositive = amt > 0.005;
-        const isNegative = amt < -0.005;
-
-        let badgeClass = 'bg-slate-800 text-slate-400 border-slate-700';
-        let text = 'Settled up';
-        if (isPositive) {
-          badgeClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
-          text = `Gets back $${amt.toFixed(2)}`;
-        } else if (isNegative) {
-          badgeClass = 'bg-rose-500/10 text-rose-400 border-rose-500/30';
-          text = `Owes $${Math.abs(amt).toFixed(2)}`;
-        }
-
-        return `
-          <div class="bg-slate-950 border border-slate-800/80 p-3.5 rounded-xl flex items-center justify-between">
-            <span class="font-bold text-sm text-slate-200">${name}</span>
-            <span class="text-xs font-extrabold px-2.5 py-1 rounded-lg border ${badgeClass}">${text}</span>
-          </div>
-        `;
-      }).join('');
 
       // Simplified Debts
       const simpDiv = document.getElementById('simplifiedList');
@@ -461,7 +548,7 @@
               </div>
             </div>
             <div class="flex items-center gap-3">
-              <span class="text-sm font-black text-emerald-400">$${s.amount.toFixed(2)}</span>
+              <span class="text-sm font-black text-emerald-400">${formatMoney(s.amount)}</span>
               <button onclick="handleSettleUp('${s.fromId}', '${s.toId}', ${s.amount})" 
                       class="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-slate-950 text-xs font-bold rounded-lg transition border border-emerald-500/40">
                 Settle
@@ -493,7 +580,7 @@
                 </div>
               </div>
               <div class="flex items-center gap-3">
-                <span class="text-sm font-black text-white">$${e.amount.toFixed(2)}</span>
+                <span class="text-sm font-black text-white">${formatMoney(e.amount)}</span>
                 <button onclick="deleteExpense('${e.id}')" title="Delete Expense" class="text-slate-600 hover:text-rose-400 transition text-xs p-1">
                   <i class="fa-solid fa-trash-can"></i>
                 </button>
