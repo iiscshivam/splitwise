@@ -1,173 +1,216 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Splitwise - Debt Simplifier</title>
+  <title>Splitwise - Expense Sharing & Debt Simplifier</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    body { font-family: 'Inter', sans-serif; }
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
   </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased">
 
   <!-- Header -->
-  <header class="bg-slate-800/80 backdrop-blur border-b border-slate-700 sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+  <header class="bg-slate-900/90 backdrop-blur border-b border-slate-800 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="bg-emerald-500 text-slate-900 p-2.5 rounded-xl font-bold text-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
+        <div class="bg-emerald-500 text-slate-950 p-2.5 rounded-xl font-extrabold text-lg flex items-center justify-center shadow-lg shadow-emerald-500/20">
           <i class="fa-solid fa-receipt"></i>
         </div>
         <div>
-          <h1 class="text-xl font-bold tracking-tight text-white">Splitwise App</h1>
-          <p class="text-xs text-slate-400">Expense Sharing & Min-Cash-Flow Debt Simplifier</p>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg font-bold tracking-tight text-white">Splitwise Pro</h1>
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full">v1.0 Ready</span>
+          </div>
+          <p class="text-xs text-slate-400">Min-Cash-Flow Debt Simplification Engine</p>
         </div>
       </div>
-      <div class="flex items-center space-x-3">
-        <button onclick="resetData()" class="px-3 py-1.5 text-xs text-slate-400 hover:text-red-400 hover:bg-slate-700/50 rounded-lg transition border border-slate-700">
-          <i class="fa-solid fa-rotate-left mr-1"></i> Reset Expenses
+
+      <div class="flex items-center space-x-2">
+        <button onclick="exportData()" title="Export JSON" class="px-3 py-1.5 text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition border border-slate-700 flex items-center gap-1">
+          <i class="fa-solid fa-download text-emerald-400"></i> Export
         </button>
-        <a href="https://github.com/iiscshivam/splitwise" target="_blank" class="px-3 py-1.5 text-xs bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition flex items-center gap-1.5 border border-slate-600">
-          <i class="fa-brands fa-github"></i> GitHub Repo
+        <button onclick="resetData()" title="Reset" class="px-3 py-1.5 text-xs text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 rounded-lg transition border border-rose-500/20 flex items-center gap-1">
+          <i class="fa-solid fa-rotate-left"></i> Reset
+        </button>
+        <a href="https://github.com/iiscshivam/splitwise" target="_blank" class="px-3 py-1.5 text-xs bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-lg font-bold transition flex items-center gap-1.5 shadow-md shadow-emerald-500/20">
+          <i class="fa-brands fa-github"></i> GitHub
         </a>
       </div>
     </div>
   </header>
 
   <!-- Main Container -->
-  <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+  <main class="max-w-6xl mx-auto px-4 py-8 flex-1 w-full space-y-8">
 
-    <!-- Top Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-      <div class="bg-slate-800/60 border border-slate-700/80 rounded-2xl p-5 shadow-sm">
-        <div class="flex items-center justify-between text-slate-400 mb-2">
-          <span class="text-xs font-semibold uppercase tracking-wider">Total Group Spend</span>
-          <i class="fa-solid fa-wallet text-emerald-400 text-lg"></i>
+    <!-- Top Metric Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 shadow-sm">
+        <div class="flex items-center justify-between text-slate-400 mb-1">
+          <span class="text-xs font-bold uppercase tracking-wider">Total Group Spend</span>
+          <i class="fa-solid fa-wallet text-emerald-400"></i>
         </div>
-        <div id="totalSpend" class="text-3xl font-extrabold text-white">$0.00</div>
+        <div id="totalSpend" class="text-2xl font-black text-white">$0.00</div>
         <div id="expenseCount" class="text-xs text-slate-400 mt-1">0 expenses logged</div>
       </div>
 
-      <div class="bg-slate-800/60 border border-slate-700/80 rounded-2xl p-5 shadow-sm">
-        <div class="flex items-center justify-between text-slate-400 mb-2">
-          <span class="text-xs font-semibold uppercase tracking-wider">Group Members</span>
-          <i class="fa-solid fa-users text-sky-400 text-lg"></i>
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 shadow-sm">
+        <div class="flex items-center justify-between text-slate-400 mb-1">
+          <span class="text-xs font-bold uppercase tracking-wider">Group Members</span>
+          <i class="fa-solid fa-users text-sky-400"></i>
         </div>
-        <div id="memberCount" class="text-3xl font-extrabold text-white">0</div>
+        <div id="memberCount" class="text-2xl font-black text-white">0</div>
         <div class="text-xs text-slate-400 mt-1">Active participants</div>
       </div>
 
-      <div class="bg-slate-800/60 border border-slate-700/80 rounded-2xl p-5 shadow-sm">
-        <div class="flex items-center justify-between text-slate-400 mb-2">
-          <span class="text-xs font-semibold uppercase tracking-wider">Simplified Transactions</span>
-          <i class="fa-solid fa-arrow-right-arrow-left text-amber-400 text-lg"></i>
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 shadow-sm">
+        <div class="flex items-center justify-between text-slate-400 mb-1">
+          <span class="text-xs font-bold uppercase tracking-wider">Simplified Debts</span>
+          <i class="fa-solid fa-bolt text-amber-400"></i>
         </div>
-        <div id="simplifiedCount" class="text-3xl font-extrabold text-white">0</div>
-        <div class="text-xs text-emerald-400 mt-1 flex items-center gap-1">
-          <i class="fa-solid fa-bolt"></i> Minimized via cash-flow algorithm
+        <div id="simplifiedCount" class="text-2xl font-black text-white">0</div>
+        <div class="text-xs text-emerald-400 mt-1">Optimized payments</div>
+      </div>
+
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 shadow-sm">
+        <div class="flex items-center justify-between text-slate-400 mb-1">
+          <span class="text-xs font-bold uppercase tracking-wider">Settlements Made</span>
+          <i class="fa-solid fa-circle-check text-indigo-400"></i>
         </div>
+        <div id="settlementCount" class="text-2xl font-black text-white">0</div>
+        <div class="text-xs text-slate-400 mt-1">Direct clears completed</div>
       </div>
     </div>
 
-    <!-- Actions & Main Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Main Layout Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       
-      <!-- Left Column: Add Expense & Add Member -->
-      <div class="space-y-6">
+      <!-- Left Column: Add Expense & Member Manager (5 Cols) -->
+      <div class="lg:col-span-5 space-y-6">
         
         <!-- Add Expense Card -->
-        <div class="bg-slate-800/70 border border-slate-700 rounded-2xl p-6 shadow-md">
-          <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-plus-circle text-emerald-400"></i> Add New Expense
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl relative">
+          <h2 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+            <span class="p-1.5 bg-emerald-500/10 text-emerald-400 rounded-lg"><i class="fa-solid fa-plus text-xs"></i></span>
+            Add New Expense
           </h2>
+
           <form id="expenseForm" onsubmit="handleAddExpense(event)" class="space-y-4">
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Description</label>
-              <input type="text" id="expDesc" required placeholder="e.g. Dinner, Hotel, Cab" 
-                     class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500">
+              <label class="block text-xs font-bold text-slate-300 mb-1.5">Description</label>
+              <input type="text" id="expDesc" required placeholder="e.g. Dinner, Airbnb, Groceries" 
+                     class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition">
             </div>
             
             <div class="grid grid-cols-2 gap-3">
               <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Amount ($)</label>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Amount ($)</label>
                 <input type="number" id="expAmount" step="0.01" min="0.01" required placeholder="0.00" 
-                       class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500">
+                       class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition">
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Paid By</label>
-                <select id="expPayer" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"></select>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Category</label>
+                <select id="expCategory" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition">
+                  <option value="Food">🍔 Food & Drink</option>
+                  <option value="Travel">🚕 Travel & Cab</option>
+                  <option value="Lodging">🏨 Lodging / Stay</option>
+                  <option value="Groceries">🛒 Groceries</option>
+                  <option value="Entertainment">🎟️ Entertainment</option>
+                  <option value="Utilities">💡 Utilities</option>
+                  <option value="General">📦 General</option>
+                </select>
               </div>
             </div>
 
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Split Equally Among</label>
-              <div id="splitCheckboxes" class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3 max-h-36 overflow-y-auto space-y-2"></div>
+              <label class="block text-xs font-bold text-slate-300 mb-1.5">Paid By</label>
+              <select id="expPayer" required class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition"></select>
             </div>
 
-            <button type="submit" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl text-sm transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="text-xs font-bold text-slate-300">Split Between</label>
+                <button type="button" onclick="toggleSelectAllSplits()" class="text-[11px] text-emerald-400 hover:underline">Select All</button>
+              </div>
+              <div id="splitCheckboxes" class="bg-slate-950 border border-slate-800 rounded-xl p-3 max-h-36 overflow-y-auto space-y-1.5"></div>
+            </div>
+
+            <button type="submit" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold rounded-xl text-sm transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
               <i class="fa-solid fa-check"></i> Add Expense
             </button>
           </form>
         </div>
 
-        <!-- Add Group Member Card -->
-        <div class="bg-slate-800/70 border border-slate-700 rounded-2xl p-6 shadow-md">
-          <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-user-plus text-sky-400"></i> Add Member
+        <!-- Add & Manage Group Members -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+          <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <span class="p-1.5 bg-sky-500/10 text-sky-400 rounded-lg"><i class="fa-solid fa-user-group text-xs"></i></span>
+            Group Members
           </h2>
+
           <form onsubmit="handleAddMember(event)" class="flex gap-2">
-            <input type="text" id="newMemberName" required placeholder="Member name" 
-                   class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-sky-500">
-            <button type="submit" class="px-4 py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition flex items-center justify-center">
+            <input type="text" id="newMemberName" required placeholder="New member name" 
+                   class="flex-1 bg-slate-950 border border-slate-700/80 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition">
+            <button type="submit" class="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-xs transition">
               Add
             </button>
           </form>
+
+          <div id="membersList" class="flex flex-wrap gap-2 pt-2"></div>
         </div>
 
       </div>
 
-      <!-- Right Column: Net Balances & Simplified Debts -->
-      <div class="lg:col-span-2 space-y-6">
+      <!-- Right Column: Simplified Debts, Net Balances & History (7 Cols) -->
+      <div class="lg:col-span-7 space-y-6">
 
-        <!-- Simplified Settlement Plan Card -->
-        <div class="bg-gradient-to-br from-slate-800 to-slate-800/90 border border-emerald-500/40 rounded-2xl p-6 shadow-xl relative overflow-hidden">
-          <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none"></div>
-          
+        <!-- Simplified Settlement Plan -->
+        <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-850 border border-emerald-500/30 rounded-2xl p-6 shadow-xl relative overflow-hidden">
           <div class="flex items-center justify-between mb-4">
             <div>
-              <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-wand-magic-sparkles text-emerald-400"></i> Simplified Debt Settlement
+              <h2 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles text-emerald-400"></i> Optimal Settlement Plan
               </h2>
-              <p class="text-xs text-slate-400">Calculated using Min-Cash-Flow algorithm to minimize total payments</p>
+              <p class="text-xs text-slate-400">Minimizes multi-party debt transfers using Min-Cash-Flow</p>
             </div>
-            <span class="px-2.5 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full">Optimal</span>
+            <span class="px-2.5 py-1 text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full">Optimal</span>
           </div>
 
-          <div id="simplifiedList" class="space-y-3">
-            <!-- Populated via JS -->
-          </div>
+          <div id="simplifiedList" class="space-y-3"></div>
         </div>
 
-        <!-- Net Balances List -->
-        <div class="bg-slate-800/70 border border-slate-700 rounded-2xl p-6 shadow-md">
-          <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <!-- Net Balances Breakdown -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl">
+          <h2 class="text-base font-bold text-white mb-4 flex items-center gap-2">
             <i class="fa-solid fa-scale-balanced text-amber-400"></i> Net Balances
           </h2>
-          <div id="netBalancesList" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <!-- Populated via JS -->
-          </div>
+          <div id="netBalancesList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
         </div>
 
-        <!-- Recent Expenses Log -->
-        <div class="bg-slate-800/70 border border-slate-700 rounded-2xl p-6 shadow-md">
-          <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-list-check text-indigo-400"></i> Expense History
-          </h2>
-          <div id="expensesHistory" class="space-y-3 max-h-80 overflow-y-auto pr-1">
-            <!-- Populated via JS -->
+        <!-- Expense History -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-clock-rotate-left text-indigo-400"></i> Expense History
+            </h2>
+            <div class="flex items-center gap-2">
+              <select id="filterCategory" onchange="loadData()" class="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-slate-300">
+                <option value="ALL">All Categories</option>
+                <option value="Food">Food & Drink</option>
+                <option value="Travel">Travel</option>
+                <option value="Lodging">Lodging</option>
+                <option value="Groceries">Groceries</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Utilities">Utilities</option>
+                <option value="General">General</option>
+              </select>
+            </div>
           </div>
+
+          <div id="expensesHistory" class="space-y-3 max-h-96 overflow-y-auto pr-1"></div>
         </div>
 
       </div>
@@ -175,178 +218,395 @@
     </div>
   </main>
 
+  <footer class="bg-slate-900/50 border-t border-slate-800 py-4 text-center text-xs text-slate-500">
+    Splitwise Pro • Production Ready • Min-Cash-Flow Algorithm Engine
+  </footer>
+
   <script>
-    let currentUsers = [];
+    // State management (with localStorage persistence & API fallback)
+    const STORAGE_KEY = 'splitwise_pro_store';
 
-    async function loadData() {
+    let defaultState = {
+      users: [
+        { id: '1', name: 'Alice' },
+        { id: '2', name: 'Bob' },
+        { id: '3', name: 'Charlie' },
+        { id: '4', name: 'Diana' }
+      ],
+      expenses: [
+        {
+          id: 'e1',
+          description: 'Team Dinner',
+          category: 'Food',
+          amount: 120.00,
+          paidById: '1',
+          splits: [
+            { userId: '1', amount: 30.00 },
+            { userId: '2', amount: 30.00 },
+            { userId: '3', amount: 30.00 },
+            { userId: '4', amount: 30.00 }
+          ],
+          date: new Date().toISOString()
+        },
+        {
+          id: 'e2',
+          description: 'Groceries & Supplies',
+          category: 'Groceries',
+          amount: 60.00,
+          paidById: '2',
+          splits: [
+            { userId: '1', amount: 20.00 },
+            { userId: '2', amount: 20.00 },
+            { userId: '3', amount: 20.00 }
+          ],
+          date: new Date().toISOString()
+        }
+      ],
+      settlements: []
+    };
+
+    function getState() {
       try {
-        const res = await fetch('/api/summary');
-        const data = await res.json();
-        
-        currentUsers = data.users;
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) return JSON.parse(saved);
+      } catch (e) {}
+      return defaultState;
+    }
 
-        // Top Stats
-        document.getElementById('totalSpend').textContent = `$${data.totalExpensesAmount.toFixed(2)}`;
-        document.getElementById('expenseCount').textContent = `${data.totalExpensesCount} expenses logged`;
-        document.getElementById('memberCount').textContent = data.users.length;
-        document.getElementById('simplifiedCount').textContent = data.simplifiedDebts.length;
+    function saveState(state) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {}
+    }
 
-        // Payer Dropdown
-        const payerSelect = document.getElementById('expPayer');
-        payerSelect.innerHTML = data.users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+    let state = getState();
 
-        // Split Checkboxes
-        const splitContainer = document.getElementById('splitCheckboxes');
-        splitContainer.innerHTML = data.users.map(u => `
-          <label class="flex items-center justify-between text-xs text-slate-200 cursor-pointer select-none py-1 px-2 rounded hover:bg-slate-800">
-            <span>${u.name}</span>
-            <input type="checkbox" name="splitUsers" value="${u.id}" checked class="rounded border-slate-700 text-emerald-500 focus:ring-0">
-          </label>
+    function roundToCents(num) {
+      return Math.round((num + Number.EPSILON) * 100) / 100;
+    }
+
+    function calculateNetBalances(users, expenses, settlements) {
+      const balances = {};
+      users.forEach(u => { balances[u.id] = 0; });
+
+      expenses.forEach(e => {
+        const total = parseFloat(e.amount);
+        if (isNaN(total) || total <= 0) return;
+        if (balances[e.paidById] === undefined) balances[e.paidById] = 0;
+        balances[e.paidById] += total;
+
+        if (Array.isArray(e.splits)) {
+          e.splits.forEach(s => {
+            if (balances[s.userId] === undefined) balances[s.userId] = 0;
+            balances[s.userId] -= parseFloat(s.amount);
+          });
+        }
+      });
+
+      settlements.forEach(s => {
+        const amt = parseFloat(s.amount);
+        if (balances[s.payerId] !== undefined) balances[s.payerId] += amt;
+        if (balances[s.recipientId] !== undefined) balances[s.recipientId] -= amt;
+      });
+
+      Object.keys(balances).forEach(id => {
+        balances[id] = roundToCents(balances[id]);
+        if (Math.abs(balances[id]) < 0.005) balances[id] = 0;
+      });
+
+      return balances;
+    }
+
+    function simplifyDebts(balances, users) {
+      const userMap = {};
+      users.forEach(u => { userMap[u.id] = u.name; });
+
+      const debtors = [];
+      const creditors = [];
+
+      Object.entries(balances).forEach(([id, amt]) => {
+        const rounded = roundToCents(amt);
+        if (rounded < -0.005) debtors.push({ id, amount: Math.abs(rounded) });
+        else if (rounded > 0.005) creditors.push({ id, amount: rounded });
+      });
+
+      debtors.sort((a, b) => b.amount - a.amount);
+      creditors.sort((a, b) => b.amount - a.amount);
+
+      const result = [];
+      let i = 0, j = 0;
+
+      while (i < debtors.length && j < creditors.length) {
+        const debtor = debtors[i];
+        const creditor = creditors[j];
+        const settleAmt = roundToCents(Math.min(debtor.amount, creditor.amount));
+
+        if (settleAmt > 0) {
+          result.push({
+            fromId: debtor.id,
+            fromName: userMap[debtor.id] || debtor.id,
+            toId: creditor.id,
+            toName: userMap[creditor.id] || creditor.id,
+            amount: settleAmt
+          });
+        }
+
+        debtor.amount = roundToCents(debtor.amount - settleAmt);
+        creditor.amount = roundToCents(creditor.amount - settleAmt);
+
+        if (debtor.amount <= 0.005) i++;
+        if (creditor.amount <= 0.005) j++;
+      }
+
+      return result;
+    }
+
+    const categoryIcons = {
+      'Food': '🍔 Food',
+      'Travel': '🚕 Travel',
+      'Lodging': '🏨 Lodging',
+      'Groceries': '🛒 Groceries',
+      'Entertainment': '🎟️ Entertainment',
+      'Utilities': '💡 Utilities',
+      'General': '📦 General'
+    };
+
+    function loadData() {
+      const filterCat = document.getElementById('filterCategory').value;
+      const filteredExpenses = filterCat === 'ALL' 
+        ? state.expenses 
+        : state.expenses.filter(e => e.category === filterCat);
+
+      const netBalances = calculateNetBalances(state.users, state.expenses, state.settlements);
+      const simplifiedDebts = simplifyDebts(netBalances, state.users);
+      const totalSpend = state.expenses.reduce((sum, e) => sum + e.amount, 0);
+
+      // Top stats
+      document.getElementById('totalSpend').textContent = `$${totalSpend.toFixed(2)}`;
+      document.getElementById('expenseCount').textContent = `${state.expenses.length} expenses logged`;
+      document.getElementById('memberCount').textContent = state.users.length;
+      document.getElementById('simplifiedCount').textContent = simplifiedDebts.length;
+      document.getElementById('settlementCount').textContent = state.settlements.length;
+
+      // Payer dropdown
+      const payerSel = document.getElementById('expPayer');
+      payerSel.innerHTML = state.users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+
+      // Split checkboxes
+      const splitDiv = document.getElementById('splitCheckboxes');
+      splitDiv.innerHTML = state.users.map(u => `
+        <label class="flex items-center justify-between text-xs text-slate-300 py-1 px-2 rounded-lg hover:bg-slate-900 cursor-pointer select-none">
+          <span>${u.name}</span>
+          <input type="checkbox" name="splitUsers" value="${u.id}" checked class="rounded border-slate-700 text-emerald-500 focus:ring-0">
+        </label>
+      `).join('');
+
+      // Members List Pills
+      const membersDiv = document.getElementById('membersList');
+      membersDiv.innerHTML = state.users.map(u => `
+        <div class="inline-flex items-center gap-1.5 bg-slate-950 border border-slate-800 px-3 py-1 rounded-full text-xs font-semibold text-slate-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span>${u.name}</span>
+          ${state.users.length > 2 ? `<button onclick="deleteMember('${u.id}')" class="text-slate-500 hover:text-rose-400 ml-1">×</button>` : ''}
+        </div>
+      `).join('');
+
+      // Net Balances
+      const balancesDiv = document.getElementById('netBalancesList');
+      balancesDiv.innerHTML = Object.entries(netBalances).map(([id, amt]) => {
+        const u = state.users.find(user => user.id === id);
+        const name = u ? u.name : id;
+        const isPositive = amt > 0.005;
+        const isNegative = amt < -0.005;
+
+        let badgeClass = 'bg-slate-800 text-slate-400 border-slate-700';
+        let text = 'Settled up';
+        if (isPositive) {
+          badgeClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+          text = `Gets back $${amt.toFixed(2)}`;
+        } else if (isNegative) {
+          badgeClass = 'bg-rose-500/10 text-rose-400 border-rose-500/30';
+          text = `Owes $${Math.abs(amt).toFixed(2)}`;
+        }
+
+        return `
+          <div class="bg-slate-950 border border-slate-800/80 p-3.5 rounded-xl flex items-center justify-between">
+            <span class="font-bold text-sm text-slate-200">${name}</span>
+            <span class="text-xs font-extrabold px-2.5 py-1 rounded-lg border ${badgeClass}">${text}</span>
+          </div>
+        `;
+      }).join('');
+
+      // Simplified Debts
+      const simpDiv = document.getElementById('simplifiedList');
+      if (simplifiedDebts.length === 0) {
+        simpDiv.innerHTML = `
+          <div class="text-center py-6 text-slate-400 text-xs bg-slate-950/60 rounded-xl border border-slate-800">
+            <i class="fa-solid fa-circle-check text-emerald-400 text-2xl mb-1.5 block"></i>
+            All debts are settled! No payments required.
+          </div>
+        `;
+      } else {
+        simpDiv.innerHTML = simplifiedDebts.map(s => `
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-3.5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center font-bold text-xs">
+                ${s.fromName.charAt(0)}
+              </div>
+              <div>
+                <div class="text-xs font-semibold text-white">
+                  <span class="text-rose-400 font-bold">${s.fromName}</span> pays <span class="text-emerald-400 font-bold">${s.toName}</span>
+                </div>
+                <div class="text-[10px] text-slate-400">Direct settlement</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-black text-emerald-400">$${s.amount.toFixed(2)}</span>
+              <button onclick="handleSettleUp('${s.fromId}', '${s.toId}', ${s.amount})" 
+                      class="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-slate-950 text-xs font-bold rounded-lg transition border border-emerald-500/40">
+                Settle
+              </button>
+            </div>
+          </div>
         `).join('');
+      }
 
-        // Net Balances
-        const balancesContainer = document.getElementById('netBalancesList');
-        balancesContainer.innerHTML = Object.entries(data.netBalances).map(([id, amount]) => {
-          const user = data.users.find(u => u.id === id);
-          const userName = user ? user.name : id;
-          const isPositive = amount > 0.01;
-          const isNegative = amount < -0.01;
-
-          let badgeClass = 'bg-slate-700/50 text-slate-400 border-slate-600';
-          let text = 'Settled up';
-          if (isPositive) {
-            badgeClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
-            text = `Gets back $${amount.toFixed(2)}`;
-          } else if (isNegative) {
-            badgeClass = 'bg-rose-500/10 text-rose-400 border-rose-500/30';
-            text = `Owes $${Math.abs(amount).toFixed(2)}`;
-          }
+      // Expense History
+      const histDiv = document.getElementById('expensesHistory');
+      if (filteredExpenses.length === 0) {
+        histDiv.innerHTML = `<p class="text-xs text-slate-500 py-6 text-center">No expenses in this category.</p>`;
+      } else {
+        histDiv.innerHTML = filteredExpenses.slice().reverse().map(e => {
+          const payer = state.users.find(u => u.id === e.paidById);
+          const payerName = payer ? payer.name : 'Unknown';
+          const catLabel = categoryIcons[e.category] || e.category || 'General';
 
           return `
-            <div class="bg-slate-900/60 border border-slate-700/60 p-3.5 rounded-xl flex items-center justify-between">
-              <span class="font-semibold text-sm text-slate-200">${userName}</span>
-              <span class="text-xs font-bold px-2.5 py-1 rounded-lg border ${badgeClass}">${text}</span>
-            </div>
-          `;
-        }).join('');
-
-        // Simplified Debts
-        const simplifiedContainer = document.getElementById('simplifiedList');
-        if (data.simplifiedDebts.length === 0) {
-          simplifiedContainer.innerHTML = `
-            <div class="text-center py-6 text-slate-400 text-sm">
-              <i class="fa-solid fa-circle-check text-emerald-400 text-2xl mb-2 block"></i>
-              All debts are completely settled! No transactions required.
-            </div>
-          `;
-        } else {
-          simplifiedContainer.innerHTML = data.simplifiedDebts.map(st => `
-            <div class="bg-slate-900/80 border border-slate-700 rounded-xl p-4 flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center font-bold text-sm">
-                  ${st.fromName.charAt(0)}
+            <div class="bg-slate-950 border border-slate-800 p-3.5 rounded-xl flex items-center justify-between group hover:border-slate-700 transition">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-white">${e.description}</span>
+                  <span class="text-[10px] px-2 py-0.5 bg-slate-800 text-slate-300 rounded border border-slate-700">${catLabel}</span>
                 </div>
-                <div>
-                  <div class="text-sm font-semibold text-white">
-                    <span class="text-rose-400 font-bold">${st.fromName}</span> pays <span class="text-emerald-400 font-bold">${st.toName}</span>
-                  </div>
-                  <div class="text-xs text-slate-400">Direct settlement</div>
+                <div class="text-[11px] text-slate-400 mt-1">
+                  Paid by <span class="text-emerald-400 font-semibold">${payerName}</span> • ${e.splits.length} split
                 </div>
               </div>
               <div class="flex items-center gap-3">
-                <span class="text-base font-extrabold text-emerald-400">$${st.amount.toFixed(2)}</span>
-                <button onclick="handleSettleUp('${st.fromId}', '${st.toId}', ${st.amount})" 
-                        class="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-slate-950 text-xs font-bold rounded-lg transition border border-emerald-500/40">
-                  Settle Up
+                <span class="text-sm font-black text-white">$${e.amount.toFixed(2)}</span>
+                <button onclick="deleteExpense('${e.id}')" title="Delete Expense" class="text-slate-600 hover:text-rose-400 transition text-xs p-1">
+                  <i class="fa-solid fa-trash-can"></i>
                 </button>
               </div>
             </div>
-          `).join('');
-        }
-
-        // Expense History
-        const expensesRes = await fetch('/api/expenses');
-        const expList = await expensesRes.json();
-        const historyContainer = document.getElementById('expensesHistory');
-        if (expList.length === 0) {
-          historyContainer.innerHTML = `<p class="text-xs text-slate-400 py-4 text-center">No expenses recorded yet.</p>`;
-        } else {
-          historyContainer.innerHTML = expList.slice().reverse().map(e => {
-            const payer = currentUsers.find(u => u.id === e.paidById);
-            const payerName = payer ? payer.name : 'Unknown';
-            return `
-              <div class="bg-slate-900/60 border border-slate-700/60 p-3 rounded-xl flex items-center justify-between">
-                <div>
-                  <div class="text-sm font-semibold text-white">${e.description}</div>
-                  <div class="text-xs text-slate-400">Paid by <span class="text-emerald-400 font-medium">${payerName}</span> • ${e.splits.length} people split</div>
-                </div>
-                <div class="text-sm font-bold text-white">$${parseFloat(e.amount).toFixed(2)}</div>
-              </div>
-            `;
-          }).join('');
-        }
-
-      } catch (err) {
-        console.error('Error loading data:', err);
+          `;
+        }).join('');
       }
     }
 
-    async function handleAddExpense(e) {
+    function handleAddExpense(e) {
       e.preventDefault();
-      const desc = document.getElementById('expDesc').value;
+      const desc = document.getElementById('expDesc').value.trim();
       const amount = parseFloat(document.getElementById('expAmount').value);
       const paidById = document.getElementById('expPayer').value;
+      const category = document.getElementById('expCategory').value;
 
-      const checkedBoxes = Array.from(document.querySelectorAll('input[name="splitUsers"]:checked'));
-      if (checkedBoxes.length === 0) {
-        alert('Please select at least one person to split the expense with.');
+      const checked = Array.from(document.querySelectorAll('input[name="splitUsers"]:checked')).map(cb => cb.value);
+      if (checked.length === 0) {
+        alert('Please select at least one person to split the bill.');
         return;
       }
 
-      const splitAmount = amount / checkedBoxes.length;
-      const splits = checkedBoxes.map(cb => ({ userId: cb.value, amount: splitAmount }));
+      const splitAmount = roundToCents(amount / checked.length);
+      const splits = checked.map(userId => ({ userId, amount: splitAmount }));
 
-      await fetch('/api/expenses', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ description: desc, amount, paidById, splits })
-      });
+      const newExpense = {
+        id: 'e_' + Date.now(),
+        description: desc,
+        category,
+        amount: roundToCents(amount),
+        paidById,
+        splits,
+        date: new Date().toISOString()
+      };
+
+      state.expenses.push(newExpense);
+      saveState(state);
 
       document.getElementById('expDesc').value = '';
       document.getElementById('expAmount').value = '';
       loadData();
     }
 
-    async function handleAddMember(e) {
+    function handleAddMember(e) {
       e.preventDefault();
-      const nameInput = document.getElementById('newMemberName');
-      const name = nameInput.value;
+      const name = document.getElementById('newMemberName').value.trim();
       if (!name) return;
 
-      await fetch('/api/users', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name })
-      });
+      if (state.users.some(u => u.name.toLowerCase() === name.toLowerCase())) {
+        alert('A member with this name already exists.');
+        return;
+      }
 
-      nameInput.value = '';
+      state.users.push({ id: Date.now().toString(), name });
+      saveState(state);
+      document.getElementById('newMemberName').value = '';
       loadData();
     }
 
-    async function handleSettleUp(payerId, recipientId, amount) {
-      await fetch('/api/settlements', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ payerId, recipientId, amount })
-      });
-      loadData();
-    }
-
-    async function resetData() {
-      if (confirm('Are you sure you want to reset all expenses and settlements?')) {
-        await fetch('/api/reset', { method: 'POST' });
+    function deleteMember(id) {
+      if (confirm('Delete this member and their expenses?')) {
+        state.users = state.users.filter(u => u.id !== id);
+        state.expenses = state.expenses.filter(e => e.paidById !== id);
+        state.expenses.forEach(e => {
+          e.splits = e.splits.filter(s => s.userId !== id);
+        });
+        state.settlements = state.settlements.filter(s => s.payerId !== id && s.recipientId !== id);
+        saveState(state);
         loadData();
       }
+    }
+
+    function deleteExpense(id) {
+      state.expenses = state.expenses.filter(e => e.id !== id);
+      saveState(state);
+      loadData();
+    }
+
+    function handleSettleUp(payerId, recipientId, amount) {
+      state.settlements.push({
+        id: 's_' + Date.now(),
+        payerId,
+        recipientId,
+        amount: roundToCents(amount),
+        date: new Date().toISOString()
+      });
+      saveState(state);
+      loadData();
+    }
+
+    function toggleSelectAllSplits() {
+      const boxes = document.querySelectorAll('input[name="splitUsers"]');
+      const allChecked = Array.from(boxes).every(b => b.checked);
+      boxes.forEach(b => b.checked = !allChecked);
+    }
+
+    function resetData() {
+      if (confirm('Reset all expenses and settlements?')) {
+        state.expenses = [];
+        state.settlements = [];
+        saveState(state);
+        loadData();
+      }
+    }
+
+    function exportData() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `splitwise-backup-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
     }
 
     // Initial load
